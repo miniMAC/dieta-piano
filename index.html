@@ -77,6 +77,20 @@
       margin:0 0 18px;
     }
 
+    .swap-controls{
+      margin:0 0 20px;
+      border:1px solid var(--line);
+      border-radius:16px;
+      background:#fff;
+      padding:14px;
+    }
+
+    .swap-controls h3{
+      margin:0 0 10px;
+      color:var(--head);
+      font-size:16px;
+    }
+
     .tab-btn{
       border:1px solid var(--line);
       background:#fff;
@@ -468,6 +482,12 @@
       <button class="tab-btn" type="button" role="tab" aria-selected="false" aria-controls="plan-glo" data-target="plan-glo">Piano Glo</button>
     </div>
 
+    <div class="swap-controls" aria-label="Alternative alimenti da sostituire">
+      <h3>Alternative alimenti (salvate in locale)</h3>
+      <div class="controls-grid" id="food-swaps-controls"></div>
+      <span class="muted">Seleziona 1 alternativa per ogni alimento: la scelta viene applicata in tutti i piani.</span>
+    </div>
+
     <section id="plan-chris" class="section plan-panel active" role="tabpanel" aria-label="Piano Chris">
       <div class="section-title">
         <h2>Chris</h2>
@@ -692,15 +712,15 @@
           <tbody>
             <tr>
               <td><span class="day">Lunedì</span></td>
-              <td>170 g yogurt greco 0%<br>30 g avena<br>1 kiwi</td>
+              <td>170 g yogurt greco 0%<br>30 g fiocchi di quinoa<br>1 kiwi</td>
               <td>1 mela</td>
-              <td>70 g riso basmati<br>140 g pollo<br>verdure<br>10 g olio EVO</td>
+              <td>70 g quinoa<br>140 g pollo<br>verdure<br>10 g olio EVO</td>
               <td>1 yogurt proteico</td>
-              <td>150 g merluzzo<br>verdure abbondanti<br>40 g pane integrale</td>
+              <td>150 g merluzzo<br>verdure abbondanti<br>200 g patate</td>
             </tr>
             <tr>
               <td><span class="day">Martedì</span></td>
-              <td>2 uova intere<br>40 g pane integrale</td>
+              <td>2 uova intere<br>150 g patate lesse</td>
               <td>1 frutto</td>
               <td>70 g pasta integrale<br>120 g tonno naturale<br>insalata<br>10 g olio EVO</td>
               <td>10 g mandorle</td>
@@ -712,27 +732,27 @@
               <td>1 pera</td>
               <td>60 g riso<br>140 g pollo<br>verdure<br>10 g olio EVO</td>
               <td>80 g bresaola</td>
-              <td>150 g pesce bianco<br>verdure<br>30 g pane integrale</td>
+              <td>150 g pesce bianco<br>verdure<br>150 g patate dolci</td>
             </tr>
             <tr>
               <td><span class="day">Giovedì</span></td>
-              <td>200 ml latte o bevanda senza zucchero<br>30 g avena<br>120 g skyr 0%</td>
+              <td>200 ml latte o bevanda senza zucchero<br>30 g fiocchi di grano saraceno<br>120 g skyr 0%</td>
               <td>1 frutto</td>
-              <td>70 g cous cous o riso<br>140 g tacchino<br>verdure<br>10 g olio EVO</td>
+              <td>70 g quinoa o farro<br>140 g tacchino<br>verdure<br>10 g olio EVO</td>
               <td>1 yogurt greco piccolo</td>
               <td>2 uova + albumi oppure fiocchi di latte<br>verdure abbondanti</td>
             </tr>
             <tr>
               <td><span class="day">Venerdì</span></td>
-              <td>170 g yogurt greco 0%<br>30 g avena<br>1 frutto</td>
+              <td>170 g yogurt greco 0%<br>30 g fiocchi di quinoa<br>1 frutto</td>
               <td>10 g frutta secca</td>
               <td>70 g pasta integrale<br>140 g pollo o tacchino<br>verdure<br>10 g olio EVO</td>
               <td>1 yogurt proteico</td>
-              <td>150 g salmone<br>verdure<br>30 g pane integrale</td>
+              <td>150 g orata<br>verdure<br>150 g patate lesse</td>
             </tr>
             <tr>
               <td><span class="day">Sabato</span></td>
-              <td>2 uova<br>40 g pane integrale</td>
+              <td>2 uova<br>150 g patate lesse</td>
               <td>1 frutto</td>
               <td>70 g riso<br>140 g pollo<br>verdure<br>10 g olio EVO</td>
               <td>1 yogurt greco</td>
@@ -740,11 +760,11 @@
             </tr>
             <tr>
               <td><span class="day">Domenica</span></td>
-              <td>170 g yogurt greco 0%<br>20 g avena</td>
+              <td>170 g yogurt greco 0%<br>20 g fiocchi di grano saraceno</td>
               <td>1 mela</td>
               <td>60 g riso o pasta<br>140 g carne magra o pesce<br>verdure<br>10 g olio EVO</td>
               <td>80 g bresaola o fiocchi di latte</td>
-              <td>150 g pesce o tacchino<br>verdure abbondanti<br>30 g pane integrale</td>
+              <td>150 g pesce o tacchino<br>verdure abbondanti<br>150 g patate al forno</td>
             </tr>
           </tbody>
         </table>
@@ -753,7 +773,7 @@
         <h3>Lista della spesa settimanale (Glo) - stima ~€62-€76</h3>
         <ul>
           <li>Proteine: pollo/tacchino 950 g, pesce misto ~750 g, tonno naturale 120 g, uova 10-12, bresaola 160 g, yogurt greco/proteico ~1.8 kg.</li>
-          <li>Carboidrati: riso/pasta/cous cous/avena ~1.1 kg totali, pane integrale ~350 g, patate ~350 g, frutta mista 12-14 pezzi.</li>
+          <li>Carboidrati: quinoa/riso/pasta/farro/fiocchi alternativi ~1.1 kg totali, patate e patate dolci ~900 g, frutta mista 12-14 pezzi.</li>
           <li>Grassi e extra: olio EVO ~80 ml, frutta secca ~80 g, verdure miste almeno 3.5-4 kg.</li>
         </ul>
       </div>
@@ -772,6 +792,7 @@
     const panels = document.querySelectorAll('.plan-panel');
     const printButton = document.getElementById('printButton');
     const toggleChickenButton = document.getElementById('toggleChickenButton');
+    const foodSwapsControls = document.getElementById('food-swaps-controls');
     const planConfigs = {
       chris: {
         defaults: { weight: 94, height: 178, age: 46, activity: 1.65, calories: 2050, sex: 'M' },
@@ -817,6 +838,40 @@
       { from: '180 g pollo', to: '140 g merluzzo o tacchino' },
       { from: '140 g pollo', to: '110 g pesce bianco o tofu' }
     ];
+    const foodSwapStorageKey = 'diet-plan-food-swaps-v1';
+    const foodSwapConfigs = [
+      {
+        id: 'cous-cous',
+        label: 'Cous cous',
+        targetPattern: /\bcous cous\b/gi,
+        options: ['quinoa', 'farro', 'bulgur']
+      },
+      {
+        id: 'riso-basmati',
+        label: 'Riso basmati',
+        targetPattern: /\briso basmati\b/gi,
+        options: ['quinoa', 'riso integrale', 'farro']
+      },
+      {
+        id: 'salmone',
+        label: 'Salmone',
+        targetPattern: /\bsalmone\b/gi,
+        options: ['orata', 'sgombro', 'merluzzo']
+      },
+      {
+        id: 'pane',
+        label: 'Pane',
+        targetPattern: /\bpane integrale\b/gi,
+        options: ['patate lesse', 'patate dolci', 'gallette di riso integrale']
+      },
+      {
+        id: 'avena',
+        label: 'Avena',
+        targetPattern: /\bavena\b/gi,
+        options: ['fiocchi di quinoa', 'fiocchi di grano saraceno', 'fiocchi di riso']
+      }
+    ];
+    let foodSwapState = {};
 
     function calculateBmr(weight, height, age, sex) {
       const base = 10 * weight + 6.25 * height - 5 * age;
@@ -1018,13 +1073,62 @@
       updatePlan(planId);
     }
 
-    function applyChickenPreference() {
+    function getFoodSwapState() {
+      const fallback = Object.fromEntries(foodSwapConfigs.map((config) => [config.id, config.options[0]]));
+      const saved = localStorage.getItem(foodSwapStorageKey);
+      if (!saved) return fallback;
+      try {
+        return { ...fallback, ...JSON.parse(saved) };
+      } catch (_error) {
+        return fallback;
+      }
+    }
+
+    function saveFoodSwapState() {
+      localStorage.setItem(foodSwapStorageKey, JSON.stringify(foodSwapState));
+    }
+
+    function renderFoodSwapControls() {
+      foodSwapsControls.innerHTML = '';
+      foodSwapConfigs.forEach((config) => {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'field';
+
+        const label = document.createElement('label');
+        label.setAttribute('for', `swap-${config.id}`);
+        label.textContent = `${config.label} →`;
+
+        const select = document.createElement('select');
+        select.id = `swap-${config.id}`;
+        config.options.forEach((option) => {
+          const optionEl = document.createElement('option');
+          optionEl.value = option;
+          optionEl.textContent = option;
+          if (foodSwapState[config.id] === option) optionEl.selected = true;
+          select.appendChild(optionEl);
+        });
+        select.addEventListener('change', () => {
+          foodSwapState[config.id] = select.value;
+          saveFoodSwapState();
+          applyPreferences();
+        });
+
+        wrapper.append(label, select);
+        foodSwapsControls.appendChild(wrapper);
+      });
+    }
+
+    function applyPreferences() {
       document.querySelectorAll('td').forEach((cell) => {
         if (!cell.dataset.originalContent) cell.dataset.originalContent = cell.innerHTML;
         let content = cell.dataset.originalContent;
         if (chickenReduced) {
           chickenSwaps.forEach((swap) => { content = content.replaceAll(swap.from, swap.to); });
         }
+        foodSwapConfigs.forEach((config) => {
+          const replacement = foodSwapState[config.id] || config.options[0];
+          content = content.replace(config.targetPattern, replacement);
+        });
         cell.innerHTML = content;
       });
       toggleChickenButton.textContent = chickenReduced ? 'Riduci pollo (ON)' : 'Riduci pollo (OFF)';
@@ -1044,9 +1148,12 @@
     printButton.addEventListener('click', () => window.print());
     toggleChickenButton.addEventListener('click', () => {
       chickenReduced = !chickenReduced;
-      applyChickenPreference();
+      applyPreferences();
     });
 
+    foodSwapState = getFoodSwapState();
+    renderFoodSwapControls();
+    applyPreferences();
     initPlan('chris');
     initPlan('glo');
   </script>
