@@ -496,7 +496,7 @@
       </div>
 
       <div class="projection">
-        <h3>Parametri personalizzabili + proiezione (oggi → 2/3/4 mesi)</h3>
+        <h3>Parametri personalizzabili + proiezione (date precise: oggi, +2, +3, +4 mesi)</h3>
         <p>I valori si salvano automaticamente in locale su questo dispositivo.</p>
         <div class="controls-grid">
           <div class="field">
@@ -547,7 +547,7 @@
           <tbody>
             <tr>
               <td><span class="day">Lunedì</span><span class="muted">Palestra</span></td>
-              <td>250 g yogurt greco 0%<br>30 g whey<br>40 g avena<br>1 banana</td>
+              <td>250 g yogurt greco 0%<br>170 g skyr 0%<br>40 g avena<br>1 banana</td>
               <td>1 mela</td>
               <td>100 g riso basmati<br>180 g pollo<br>verdure a volontà<br>10 g olio EVO</td>
               <td>170 g skyr<br>15 g mandorle</td>
@@ -558,12 +558,12 @@
               <td>3 uova intere<br>60 g pane integrale<br>1 kiwi</td>
               <td>1 yogurt greco piccolo</td>
               <td>90 g pasta integrale<br>160 g tonno naturale<br>insalata<br>10 g olio EVO</td>
-              <td>30 g whey<br>1 banana</td>
+              <td>170 g skyr 0%<br>1 banana</td>
               <td>200 g tacchino<br>verdure grigliate<br>200 g patate lesse</td>
             </tr>
             <tr>
               <td><span class="day">Mercoledì</span><span class="muted">Riposo attivo</span></td>
-              <td>250 g yogurt greco 0%<br>30 g whey<br>20 g noci</td>
+              <td>250 g yogurt greco 0%<br>170 g skyr 0%<br>20 g noci</td>
               <td>1 pera</td>
               <td>80 g riso<br>180 g pollo<br>verdure<br>10 g olio EVO</td>
               <td>80 g bresaola</td>
@@ -571,7 +571,7 @@
             </tr>
             <tr>
               <td><span class="day">Giovedì</span><span class="muted">Palestra</span></td>
-              <td>250 ml latte o senza lattosio<br>40 g avena<br>30 g whey</td>
+              <td>250 ml latte o senza lattosio<br>40 g avena<br>170 g skyr 0%</td>
               <td>1 frutto</td>
               <td>100 g riso jasmine<br>180 g tacchino<br>verdure<br>10 g olio EVO</td>
               <td>170 g yogurt proteico<br>15 g nocciole</td>
@@ -582,12 +582,12 @@
               <td>3 uova + 150 g albumi<br>50 g pane integrale</td>
               <td>1 mela</td>
               <td>90 g pasta integrale<br>180 g pollo o tacchino<br>verdure<br>10 g olio EVO</td>
-              <td>30 g whey<br>1 banana</td>
+              <td>170 g skyr 0%<br>1 banana</td>
               <td>200 g pesce bianco<br>verdure<br>200 g patate al forno</td>
             </tr>
             <tr>
               <td><span class="day">Sabato</span><span class="muted">Libero controllato</span></td>
-              <td>250 g yogurt greco 0%<br>30 g whey<br>1 frutto</td>
+              <td>250 g yogurt greco 0%<br>170 g skyr 0%<br>1 frutto</td>
               <td>10 g frutta secca</td>
               <td>80 g riso o pasta<br>180 g carne magra<br>verdure<br>10 g olio EVO</td>
               <td>1 yogurt proteico</td>
@@ -595,7 +595,7 @@
             </tr>
             <tr>
               <td><span class="day">Domenica</span><span class="muted">Riposo</span></td>
-              <td>250 g yogurt greco 0%<br>30 g whey<br>20 g avena</td>
+              <td>250 g yogurt greco 0%<br>170 g skyr 0%<br>20 g avena</td>
               <td>1 frutto</td>
               <td>80 g riso<br>180 g pollo<br>verdure<br>10 g olio EVO</td>
               <td>80 g bresaola o 150 g fiocchi di latte</td>
@@ -641,7 +641,7 @@
       </div>
 
       <div class="projection">
-        <h3>Parametri personalizzabili + proiezione (oggi → 2/3/4 mesi)</h3>
+        <h3>Parametri personalizzabili + proiezione (date precise: oggi, +2, +3, +4 mesi)</h3>
         <p>I valori si salvano automaticamente in locale su questo dispositivo.</p>
         <div class="controls-grid">
           <div class="field">
@@ -716,7 +716,7 @@
             </tr>
             <tr>
               <td><span class="day">Giovedì</span></td>
-              <td>200 ml latte o bevanda senza zucchero<br>30 g avena<br>20 g whey</td>
+              <td>200 ml latte o bevanda senza zucchero<br>30 g avena<br>120 g skyr 0%</td>
               <td>1 frutto</td>
               <td>70 g cous cous o riso<br>140 g tacchino<br>verdure<br>10 g olio EVO</td>
               <td>1 yogurt greco piccolo</td>
@@ -827,6 +827,16 @@
       return Math.max(min, Math.min(max, value));
     }
 
+    function formatDateLabel(date) {
+      return date.toLocaleDateString('it-IT', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    }
+
+    function addMonthsFromDate(baseDate, monthsToAdd) {
+      const result = new Date(baseDate);
+      result.setMonth(result.getMonth() + monthsToAdd);
+      return result;
+    }
+
     function getState(planId) {
       const saved = localStorage.getItem(`diet-plan-${planId}`);
       if (!saved) return { ...planConfigs[planId].defaults };
@@ -872,7 +882,7 @@
       ctx.stroke();
 
       ctx.fillStyle = '#1f2937';
-      ctx.font = '12px Arial';
+      ctx.font = '11px Arial';
       points.forEach((point, idx) => {
         const x = padding.left + idx * xStep;
         const y = height - padding.bottom - (point.weight - minW) * scaleY;
@@ -881,8 +891,11 @@
         ctx.fillStyle = '#2563eb';
         ctx.fill();
         ctx.fillStyle = '#1f2937';
-        ctx.fillText(point.label, x - 18, height - 12);
-        ctx.fillText(`${point.weight.toFixed(1)}kg`, x - 22, y - 10);
+        const labelWidth = ctx.measureText(point.label).width;
+        const weightLabel = `${point.weight.toFixed(1)}kg`;
+        const weightWidth = ctx.measureText(weightLabel).width;
+        ctx.fillText(point.label, x - labelWidth / 2, height - 12);
+        ctx.fillText(weightLabel, x - weightWidth / 2, y - 10);
       });
     }
 
@@ -920,11 +933,13 @@
       else focus = 'Surplus calorico: probabile aumento peso, riduci calorie se vuoi dimagrire.';
       ui.focusOut.textContent = focus;
 
+      const today = new Date();
       const projections = [2, 3, 4].map((month) => {
         const projected = clamp(state.weight - weeklyLoss * (month * 4.345), 35, 260);
-        return { label: `${month}m`, weight: projected };
+        const projectionDate = addMonthsFromDate(today, month);
+        return { label: formatDateLabel(projectionDate), weight: projected };
       });
-      const points = [{ label: 'Oggi', weight: state.weight }, ...projections];
+      const points = [{ label: formatDateLabel(today), weight: state.weight }, ...projections];
       drawProjectionChart(ui.chart, points);
 
       ui.summary.textContent = `Mantenimento stimato ${Math.round(maintenance)} kcal · Perdita stimata ${weeklyLoss.toFixed(2)} kg/settimana`;
