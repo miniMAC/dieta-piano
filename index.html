@@ -855,10 +855,21 @@
       ctx.clearRect(0, 0, width, height);
 
       const weights = points.map((point) => point.weight);
-      const minW = Math.min(...weights) - 1;
-      const maxW = Math.max(...weights) + 1;
+      const minW = Math.floor((Math.min(...weights) - 0.8) * 10) / 10;
+      const maxW = Math.ceil((Math.max(...weights) + 0.8) * 10) / 10;
       const xStep = (width - padding.left - padding.right) / (points.length - 1);
       const scaleY = (height - padding.top - padding.bottom) / (maxW - minW || 1);
+      const trendDelta = points[points.length - 1].weight - points[0].weight;
+      const trendIsLoss = trendDelta < 0;
+      const lineColor = trendIsLoss ? '#16a34a' : '#2563eb';
+      const fillTopColor = trendIsLoss ? 'rgba(22, 163, 74, 0.24)' : 'rgba(37, 99, 235, 0.24)';
+      const fillBottomColor = trendIsLoss ? 'rgba(22, 163, 74, 0.03)' : 'rgba(37, 99, 235, 0.03)';
+
+      const pointsWithCoords = points.map((point, idx) => {
+        const x = padding.left + idx * xStep;
+        const y = height - padding.bottom - (point.weight - minW) * scaleY;
+        return { ...point, x, y };
+      });
 
       ctx.strokeStyle = '#e5e7eb';
       ctx.lineWidth = 1;
@@ -870,25 +881,56 @@
         ctx.stroke();
       }
 
-      ctx.strokeStyle = '#2563eb';
+      ctx.fillStyle = '#6b7280';
+      ctx.font = '10px Arial';
+      for (let i = 0; i < 5; i += 1) {
+        const ratio = 1 - (i / 4);
+        const value = minW + (maxW - minW) * ratio;
+        const y = padding.top + i * ((height - padding.top - padding.bottom) / 4);
+        ctx.fillText(`${value.toFixed(1)}kg`, 8, y + 3);
+      }
+
+      ctx.beginPath();
+      pointsWithCoords.forEach((point, idx) => {
+        if (idx === 0) {
+          ctx.moveTo(point.x, point.y);
+        } else {
+          const prev = pointsWithCoords[idx - 1];
+          const cpX = (prev.x + point.x) / 2;
+          ctx.quadraticCurveTo(cpX, prev.y, point.x, point.y);
+        }
+      });
+
+      const areaGradient = ctx.createLinearGradient(0, padding.top, 0, height - padding.bottom);
+      areaGradient.addColorStop(0, fillTopColor);
+      areaGradient.addColorStop(1, fillBottomColor);
+      ctx.lineTo(pointsWithCoords[pointsWithCoords.length - 1].x, height - padding.bottom);
+      ctx.lineTo(pointsWithCoords[0].x, height - padding.bottom);
+      ctx.closePath();
+      ctx.fillStyle = areaGradient;
+      ctx.fill();
+
+      ctx.strokeStyle = lineColor;
       ctx.lineWidth = 3;
       ctx.beginPath();
-      points.forEach((point, idx) => {
-        const x = padding.left + idx * xStep;
-        const y = height - padding.bottom - (point.weight - minW) * scaleY;
-        if (idx === 0) ctx.moveTo(x, y);
-        else ctx.lineTo(x, y);
+      pointsWithCoords.forEach((point, idx) => {
+        if (idx === 0) {
+          ctx.moveTo(point.x, point.y);
+        } else {
+          const prev = pointsWithCoords[idx - 1];
+          const cpX = (prev.x + point.x) / 2;
+          ctx.quadraticCurveTo(cpX, prev.y, point.x, point.y);
+        }
       });
       ctx.stroke();
 
       ctx.fillStyle = '#1f2937';
       ctx.font = '11px Arial';
-      points.forEach((point, idx) => {
-        const x = padding.left + idx * xStep;
-        const y = height - padding.bottom - (point.weight - minW) * scaleY;
+      pointsWithCoords.forEach((point) => {
+        const { x, y } = point;
         ctx.beginPath();
         ctx.arc(x, y, 4, 0, Math.PI * 2);
-        ctx.fillStyle = '#2563eb';
+        ctx.fillStyle = lineColor;
         ctx.fill();
         ctx.fillStyle = '#1f2937';
         const labelWidth = ctx.measureText(point.label).width;
@@ -915,7 +957,7 @@
       const bmr = calculateBmr(state.weight, state.height, state.age, state.sex);
       const maintenance = bmr * state.activity;
       const deficit = maintenance - state.calories;
-      const weeklyLoss = clamp(deficit * 7 / 7700, -0.4, 1.4);
+      const weeklyLoss = clamp(deficit * 7 / 7700, -0.8, 1.4);
       const protein = Math.round(clamp(state.weight * 1.8, 90, 220));
       const fat = Math.round(clamp(state.weight * 0.7, 40, 90));
       const carbs = Math.max(50, Math.round((state.calories - protein * 4 - fat * 9) / 4));
@@ -942,7 +984,10 @@
       const points = [{ label: formatDateLabel(today), weight: state.weight }, ...projections];
       drawProjectionChart(ui.chart, points);
 
-      ui.summary.textContent = `Mantenimento stimato ${Math.round(maintenance)} kcal · Perdita stimata ${weeklyLoss.toFixed(2)} kg/settimana`;
+      const trendLabel = weeklyLoss >= 0
+        ? `Perdita stimata ${weeklyLoss.toFixed(2)} kg/settimana`
+        : `Aumento stimato ${Math.abs(weeklyLoss).toFixed(2)} kg/settimana`;
+      ui.summary.textContent = `Mantenimento stimato ${Math.round(maintenance)} kcal · ${trendLabel}`;
     }
 
     function initPlan(planId) {
