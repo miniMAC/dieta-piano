@@ -70,6 +70,37 @@
       padding:24px;
     }
 
+    .tabs{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin:0 0 18px;
+    }
+
+    .tab-btn{
+      border:1px solid var(--line);
+      background:#fff;
+      color:var(--head);
+      border-radius:12px;
+      font-weight:700;
+      padding:10px 14px;
+      cursor:pointer;
+    }
+
+    .tab-btn.active{
+      background:var(--accent);
+      color:#fff;
+      border-color:var(--accent);
+    }
+
+    .plan-panel{
+      display:none;
+    }
+
+    .plan-panel.active{
+      display:block;
+    }
+
     .section-title{
       display:flex;
       justify-content:space-between;
@@ -268,10 +299,34 @@
     }
 
     @media print{
+      @page{
+        size:A4 landscape;
+        margin:8mm;
+      }
+
       body{ background:#fff; }
       .wrapper{ max-width:none; margin:0; padding:0; }
-      .section,.hero,.footer{ box-shadow:none; }
-      .print-btn{ display:none; }
+      .hero .note,
+      .tabs,
+      .footer,
+      .cards,
+      .print-btn{ display:none !important; }
+      .hero,
+      .section{ box-shadow:none; border-radius:0; margin:0; padding:0; }
+      .section:not(.active){ display:none !important; }
+      .section-title{ margin-bottom:6px; }
+      .section-title h2{ font-size:18px; }
+      .badge{ font-size:10px; padding:4px 8px; }
+      table{
+        min-width:0;
+        width:100%;
+        font-size:10px;
+      }
+      th,td{
+        padding:5px 6px;
+        line-height:1.15;
+      }
+      .muted{ font-size:9px; margin-top:2px; }
     }
   </style>
 </head>
@@ -284,10 +339,15 @@
         Piano organizzativo pratico. Le quantità sono stimate e vanno pesate preferibilmente a crudo.
         Se ci sono patologie, farmaci o problemi metabolici, meglio adattarlo con un nutrizionista.
       </div>
-      <button class="print-btn" onclick="window.print()">Stampa / Salva PDF</button>
+      <button id="printButton" class="print-btn" type="button">Stampa / Salva PDF</button>
     </div>
 
-    <section class="section">
+    <div class="tabs" role="tablist" aria-label="Selezione piano">
+      <button class="tab-btn active" type="button" role="tab" aria-selected="true" aria-controls="plan-chris" data-target="plan-chris">Piano Chris</button>
+      <button class="tab-btn" type="button" role="tab" aria-selected="false" aria-controls="plan-glo" data-target="plan-glo">Piano Glo</button>
+    </div>
+
+    <section id="plan-chris" class="section plan-panel active" role="tabpanel" aria-label="Piano Chris">
       <div class="section-title">
         <h2>Chris</h2>
         <span class="badge">Obiettivo: dimagrimento deciso ma sostenibile</span>
@@ -388,7 +448,7 @@
       </div>
     </section>
 
-    <section class="section">
+    <section id="plan-glo" class="section plan-panel" role="tabpanel" aria-label="Piano Glo">
       <div class="section-title">
         <h2>Glo</h2>
         <span class="badge">Obiettivo: dimagrimento graduale e semplice</span>
@@ -496,5 +556,30 @@
       </p>
     </div>
   </div>
+  <script>
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    const panels = document.querySelectorAll('.plan-panel');
+    const printButton = document.getElementById('printButton');
+
+    function activatePlan(targetId) {
+      panels.forEach((panel) => {
+        panel.classList.toggle('active', panel.id === targetId);
+      });
+
+      tabButtons.forEach((button) => {
+        const isActive = button.dataset.target === targetId;
+        button.classList.toggle('active', isActive);
+        button.setAttribute('aria-selected', String(isActive));
+      });
+    }
+
+    tabButtons.forEach((button) => {
+      button.addEventListener('click', () => activatePlan(button.dataset.target));
+    });
+
+    printButton.addEventListener('click', () => {
+      window.print();
+    });
+  </script>
 </body>
 </html>
