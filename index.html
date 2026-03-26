@@ -291,6 +291,37 @@
       cursor:pointer;
     }
 
+    .print-btn.secondary{
+      background:transparent;
+      color:#fff;
+      margin-left:10px;
+    }
+
+    .print-shopping{
+      margin-top:18px;
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:14px 16px;
+      background:#fff;
+      display:none;
+    }
+
+    .print-shopping h3{
+      margin:0 0 8px;
+      font-size:16px;
+      color:var(--head);
+    }
+
+    .print-shopping ul{
+      margin:0;
+      padding-left:18px;
+    }
+
+    .print-shopping li{
+      margin-bottom:5px;
+      font-size:13px;
+    }
+
     @media (max-width: 768px){
       .hero h1{font-size:26px}
       .section-title h2{font-size:22px}
@@ -327,6 +358,21 @@
         line-height:1.15;
       }
       .muted{ font-size:9px; margin-top:2px; }
+      .print-shopping{
+        display:block;
+        margin-top:8px;
+        border:1px solid #d1d5db;
+        padding:8px;
+        break-inside:avoid;
+      }
+      .print-shopping h3{
+        font-size:11px;
+        margin:0 0 4px;
+      }
+      .print-shopping li{
+        font-size:9px;
+        margin-bottom:2px;
+      }
     }
   </style>
 </head>
@@ -340,6 +386,7 @@
         Se ci sono patologie, farmaci o problemi metabolici, meglio adattarlo con un nutrizionista.
       </div>
       <button id="printButton" class="print-btn" type="button">Stampa / Salva PDF</button>
+      <button id="toggleChickenButton" class="print-btn secondary" type="button" aria-pressed="false">Riduci pollo (OFF)</button>
     </div>
 
     <div class="tabs" role="tablist" aria-label="Selezione piano">
@@ -446,6 +493,14 @@
           </tbody>
         </table>
       </div>
+      <div class="print-shopping">
+        <h3>Spesa settimanale (Chris) - stima ~€88-€102</h3>
+        <ul>
+          <li>Proteine: pollo/tacchino 1.4 kg, pesce (salmone/merluzzo) 1.1 kg, manzo magro 180 g, tonno naturale 320 g, bresaola 160 g, yogurt greco/skyr/proteico ~2.5 kg.</li>
+          <li>Carboidrati: riso/pasta/avena ~1.6 kg totali, pane integrale ~600 g, patate ~500 g, frutta mista 14-16 pezzi.</li>
+          <li>Grassi e extra: olio EVO ~100 ml, frutta secca ~120 g, verdure miste almeno 4.5-5 kg.</li>
+        </ul>
+      </div>
     </section>
 
     <section id="plan-glo" class="section plan-panel" role="tabpanel" aria-label="Piano Glo">
@@ -546,6 +601,14 @@
           </tbody>
         </table>
       </div>
+      <div class="print-shopping">
+        <h3>Spesa settimanale (Glo) - stima ~€62-€76</h3>
+        <ul>
+          <li>Proteine: pollo/tacchino 950 g, pesce misto ~750 g, tonno naturale 120 g, uova 10-12, bresaola 160 g, yogurt greco/proteico ~1.8 kg.</li>
+          <li>Carboidrati: riso/pasta/cous cous/avena ~1.1 kg totali, pane integrale ~350 g, patate ~350 g, frutta mista 12-14 pezzi.</li>
+          <li>Grassi e extra: olio EVO ~80 ml, frutta secca ~80 g, verdure miste almeno 3.5-4 kg.</li>
+        </ul>
+      </div>
     </section>
 
     <div class="footer">
@@ -560,6 +623,34 @@
     const tabButtons = document.querySelectorAll('.tab-btn');
     const panels = document.querySelectorAll('.plan-panel');
     const printButton = document.getElementById('printButton');
+    const toggleChickenButton = document.getElementById('toggleChickenButton');
+    let chickenReduced = false;
+
+    const chickenSwaps = [
+      { from: '180 g pollo o tacchino', to: '140 g legumi + 120 g tacchino' },
+      { from: '140 g pollo o tacchino', to: '110 g legumi + 100 g tacchino' },
+      { from: '180 g pollo', to: '140 g merluzzo o tacchino' },
+      { from: '140 g pollo', to: '110 g pesce bianco o tofu' }
+    ];
+
+    function applyChickenPreference() {
+      document.querySelectorAll('td').forEach((cell) => {
+        if (!cell.dataset.originalContent) {
+          cell.dataset.originalContent = cell.innerHTML;
+        }
+
+        let content = cell.dataset.originalContent;
+        if (chickenReduced) {
+          chickenSwaps.forEach((swap) => {
+            content = content.replaceAll(swap.from, swap.to);
+          });
+        }
+        cell.innerHTML = content;
+      });
+
+      toggleChickenButton.textContent = chickenReduced ? 'Riduci pollo (ON)' : 'Riduci pollo (OFF)';
+      toggleChickenButton.setAttribute('aria-pressed', String(chickenReduced));
+    }
 
     function activatePlan(targetId) {
       panels.forEach((panel) => {
@@ -579,6 +670,11 @@
 
     printButton.addEventListener('click', () => {
       window.print();
+    });
+
+    toggleChickenButton.addEventListener('click', () => {
+      chickenReduced = !chickenReduced;
+      applyChickenPreference();
     });
   </script>
 </body>
