@@ -258,6 +258,80 @@
       margin-bottom:8px;
     }
 
+    .controls-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit, minmax(170px, 1fr));
+      gap:12px;
+      margin:8px 0 10px;
+    }
+
+    .field{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+    }
+
+    .field label{
+      font-size:12px;
+      color:var(--muted);
+      font-weight:700;
+    }
+
+    .field input,
+    .field select{
+      border:1px solid var(--line);
+      border-radius:10px;
+      padding:9px 10px;
+      font-size:14px;
+      width:100%;
+    }
+
+    .inline-actions{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      margin-top:6px;
+    }
+
+    .mini-btn{
+      border:1px solid var(--line);
+      background:#fff;
+      color:var(--head);
+      border-radius:10px;
+      padding:8px 12px;
+      font-weight:700;
+      cursor:pointer;
+      font-size:12px;
+    }
+
+    .projection{
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:14px;
+      margin-bottom:18px;
+      background:#fbfdff;
+    }
+
+    .projection h3{
+      margin:0 0 4px;
+      font-size:16px;
+      color:var(--head);
+    }
+
+    .projection p{
+      margin:0 0 10px;
+      font-size:13px;
+      color:var(--muted);
+    }
+
+    .chart{
+      width:100%;
+      height:220px;
+      border:1px solid var(--line);
+      border-radius:12px;
+      background:#fff;
+    }
+
     .footer{
       margin-top:26px;
       background:#0f172a;
@@ -410,15 +484,52 @@
         </div>
         <div class="card">
           <h3>Target giornaliero</h3>
-          <p><strong>Calorie:</strong> ~2050 kcal<br>
-          <strong>Proteine:</strong> 180 g<br>
-          <strong>Carboidrati:</strong> 170 g<br>
-          <strong>Grassi:</strong> 60 g</p>
+          <p><strong>Calorie:</strong> <span id="chris-calories">~2050</span> kcal<br>
+          <strong>Proteine:</strong> <span id="chris-protein">180</span> g<br>
+          <strong>Carboidrati:</strong> <span id="chris-carbs">170</span> g<br>
+          <strong>Grassi:</strong> <span id="chris-fat">60</span> g</p>
         </div>
         <div class="card">
           <h3>Focus</h3>
-          <p>Proteine alte, carbo più utili nei giorni palestra, controllo del weekend e buona regolarità nei passi.</p>
+          <p id="chris-focus">Proteine alte, carbo più utili nei giorni palestra, controllo del weekend e buona regolarità nei passi.</p>
         </div>
+      </div>
+
+      <div class="projection">
+        <h3>Parametri personalizzabili + proiezione (oggi → 2/3/4 mesi)</h3>
+        <p>I valori si salvano automaticamente in locale su questo dispositivo.</p>
+        <div class="controls-grid">
+          <div class="field">
+            <label for="chris-weight">Peso (kg)</label>
+            <input id="chris-weight" type="number" min="40" max="250" step="0.1">
+          </div>
+          <div class="field">
+            <label for="chris-height">Altezza (cm)</label>
+            <input id="chris-height" type="number" min="130" max="220" step="1">
+          </div>
+          <div class="field">
+            <label for="chris-age">Età</label>
+            <input id="chris-age" type="number" min="16" max="90" step="1">
+          </div>
+          <div class="field">
+            <label for="chris-activity">Attività</label>
+            <select id="chris-activity">
+              <option value="1.35">Bassa</option>
+              <option value="1.5">Media</option>
+              <option value="1.65">Alta</option>
+              <option value="1.8">Molto alta</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="chris-daily-calories">Calorie target</label>
+            <input id="chris-daily-calories" type="number" min="1000" max="4000" step="10">
+          </div>
+        </div>
+        <div class="inline-actions">
+          <button class="mini-btn" type="button" id="chris-reset">Ripristina default</button>
+          <span class="muted" id="chris-summary"></span>
+        </div>
+        <canvas id="chris-chart" class="chart" width="900" height="220"></canvas>
       </div>
 
       <div class="table-wrap">
@@ -518,15 +629,52 @@
         </div>
         <div class="card">
           <h3>Target giornaliero</h3>
-          <p><strong>Calorie:</strong> ~1450 kcal<br>
-          <strong>Proteine:</strong> 120 g<br>
-          <strong>Carboidrati:</strong> 120 g<br>
-          <strong>Grassi:</strong> 48 g</p>
+          <p><strong>Calorie:</strong> <span id="glo-calories">~1450</span> kcal<br>
+          <strong>Proteine:</strong> <span id="glo-protein">120</span> g<br>
+          <strong>Carboidrati:</strong> <span id="glo-carbs">120</span> g<br>
+          <strong>Grassi:</strong> <span id="glo-fat">48</span> g</p>
         </div>
         <div class="card">
           <h3>Focus</h3>
-          <p>Piano facile da seguire, fame sotto controllo, camminate regolari e pasto libero con moderazione.</p>
+          <p id="glo-focus">Piano facile da seguire, fame sotto controllo, camminate regolari e pasto libero con moderazione.</p>
         </div>
+      </div>
+
+      <div class="projection">
+        <h3>Parametri personalizzabili + proiezione (oggi → 2/3/4 mesi)</h3>
+        <p>I valori si salvano automaticamente in locale su questo dispositivo.</p>
+        <div class="controls-grid">
+          <div class="field">
+            <label for="glo-weight">Peso (kg)</label>
+            <input id="glo-weight" type="number" min="40" max="250" step="0.1">
+          </div>
+          <div class="field">
+            <label for="glo-height">Altezza (cm)</label>
+            <input id="glo-height" type="number" min="130" max="220" step="1">
+          </div>
+          <div class="field">
+            <label for="glo-age">Età</label>
+            <input id="glo-age" type="number" min="16" max="90" step="1">
+          </div>
+          <div class="field">
+            <label for="glo-activity">Attività</label>
+            <select id="glo-activity">
+              <option value="1.3">Molto bassa</option>
+              <option value="1.4">Bassa</option>
+              <option value="1.5">Media</option>
+              <option value="1.65">Alta</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="glo-daily-calories">Calorie target</label>
+            <input id="glo-daily-calories" type="number" min="900" max="3200" step="10">
+          </div>
+        </div>
+        <div class="inline-actions">
+          <button class="mini-btn" type="button" id="glo-reset">Ripristina default</button>
+          <span class="muted" id="glo-summary"></span>
+        </div>
+        <canvas id="glo-chart" class="chart" width="900" height="220"></canvas>
       </div>
 
       <div class="table-wrap">
@@ -624,8 +772,45 @@
     const panels = document.querySelectorAll('.plan-panel');
     const printButton = document.getElementById('printButton');
     const toggleChickenButton = document.getElementById('toggleChickenButton');
+    const planConfigs = {
+      chris: {
+        defaults: { weight: 94, height: 178, age: 46, activity: 1.65, calories: 2050, sex: 'M' },
+        ui: {
+          weight: document.getElementById('chris-weight'),
+          height: document.getElementById('chris-height'),
+          age: document.getElementById('chris-age'),
+          activity: document.getElementById('chris-activity'),
+          calories: document.getElementById('chris-daily-calories'),
+          caloriesOut: document.getElementById('chris-calories'),
+          proteinOut: document.getElementById('chris-protein'),
+          carbsOut: document.getElementById('chris-carbs'),
+          fatOut: document.getElementById('chris-fat'),
+          focusOut: document.getElementById('chris-focus'),
+          summary: document.getElementById('chris-summary'),
+          chart: document.getElementById('chris-chart'),
+          reset: document.getElementById('chris-reset')
+        }
+      },
+      glo: {
+        defaults: { weight: 76, height: 164, age: 38, activity: 1.35, calories: 1450, sex: 'F' },
+        ui: {
+          weight: document.getElementById('glo-weight'),
+          height: document.getElementById('glo-height'),
+          age: document.getElementById('glo-age'),
+          activity: document.getElementById('glo-activity'),
+          calories: document.getElementById('glo-daily-calories'),
+          caloriesOut: document.getElementById('glo-calories'),
+          proteinOut: document.getElementById('glo-protein'),
+          carbsOut: document.getElementById('glo-carbs'),
+          fatOut: document.getElementById('glo-fat'),
+          focusOut: document.getElementById('glo-focus'),
+          summary: document.getElementById('glo-summary'),
+          chart: document.getElementById('glo-chart'),
+          reset: document.getElementById('glo-reset')
+        }
+      }
+    };
     let chickenReduced = false;
-
     const chickenSwaps = [
       { from: '180 g pollo o tacchino', to: '140 g legumi + 120 g tacchino' },
       { from: '140 g pollo o tacchino', to: '110 g legumi + 100 g tacchino' },
@@ -633,30 +818,161 @@
       { from: '140 g pollo', to: '110 g pesce bianco o tofu' }
     ];
 
+    function calculateBmr(weight, height, age, sex) {
+      const base = 10 * weight + 6.25 * height - 5 * age;
+      return sex === 'F' ? base - 161 : base + 5;
+    }
+
+    function clamp(value, min, max) {
+      return Math.max(min, Math.min(max, value));
+    }
+
+    function getState(planId) {
+      const saved = localStorage.getItem(`diet-plan-${planId}`);
+      if (!saved) return { ...planConfigs[planId].defaults };
+      return { ...planConfigs[planId].defaults, ...JSON.parse(saved) };
+    }
+
+    function saveState(planId, state) {
+      localStorage.setItem(`diet-plan-${planId}`, JSON.stringify(state));
+    }
+
+    function drawProjectionChart(canvas, points) {
+      const ctx = canvas.getContext('2d');
+      const width = canvas.width;
+      const height = canvas.height;
+      const padding = { top: 24, right: 30, bottom: 34, left: 52 };
+      ctx.clearRect(0, 0, width, height);
+
+      const weights = points.map((point) => point.weight);
+      const minW = Math.min(...weights) - 1;
+      const maxW = Math.max(...weights) + 1;
+      const xStep = (width - padding.left - padding.right) / (points.length - 1);
+      const scaleY = (height - padding.top - padding.bottom) / (maxW - minW || 1);
+
+      ctx.strokeStyle = '#e5e7eb';
+      ctx.lineWidth = 1;
+      for (let i = 0; i < 5; i += 1) {
+        const y = padding.top + i * ((height - padding.top - padding.bottom) / 4);
+        ctx.beginPath();
+        ctx.moveTo(padding.left, y);
+        ctx.lineTo(width - padding.right, y);
+        ctx.stroke();
+      }
+
+      ctx.strokeStyle = '#2563eb';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      points.forEach((point, idx) => {
+        const x = padding.left + idx * xStep;
+        const y = height - padding.bottom - (point.weight - minW) * scaleY;
+        if (idx === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      });
+      ctx.stroke();
+
+      ctx.fillStyle = '#1f2937';
+      ctx.font = '12px Arial';
+      points.forEach((point, idx) => {
+        const x = padding.left + idx * xStep;
+        const y = height - padding.bottom - (point.weight - minW) * scaleY;
+        ctx.beginPath();
+        ctx.arc(x, y, 4, 0, Math.PI * 2);
+        ctx.fillStyle = '#2563eb';
+        ctx.fill();
+        ctx.fillStyle = '#1f2937';
+        ctx.fillText(point.label, x - 18, height - 12);
+        ctx.fillText(`${point.weight.toFixed(1)}kg`, x - 22, y - 10);
+      });
+    }
+
+    function updatePlan(planId) {
+      const config = planConfigs[planId];
+      const ui = config.ui;
+      const state = {
+        weight: Number(ui.weight.value),
+        height: Number(ui.height.value),
+        age: Number(ui.age.value),
+        activity: Number(ui.activity.value),
+        calories: Number(ui.calories.value),
+        sex: config.defaults.sex
+      };
+      saveState(planId, state);
+
+      const bmr = calculateBmr(state.weight, state.height, state.age, state.sex);
+      const maintenance = bmr * state.activity;
+      const deficit = maintenance - state.calories;
+      const weeklyLoss = clamp(deficit * 7 / 7700, -0.4, 1.4);
+      const protein = Math.round(clamp(state.weight * 1.8, 90, 220));
+      const fat = Math.round(clamp(state.weight * 0.7, 40, 90));
+      const carbs = Math.max(50, Math.round((state.calories - protein * 4 - fat * 9) / 4));
+
+      ui.caloriesOut.textContent = `~${Math.round(state.calories)}`;
+      ui.proteinOut.textContent = protein;
+      ui.carbsOut.textContent = carbs;
+      ui.fatOut.textContent = fat;
+
+      let focus = 'Obiettivo bilanciato.';
+      if (deficit > 700) focus = 'Taglio aggressivo: utile solo per fasi brevi e molto controllo weekend.';
+      else if (deficit > 350) focus = 'Dimagrimento sostenibile: alta aderenza e progressione costante.';
+      else if (deficit > 100) focus = 'Taglio leggero: ritmo lento ma più facile da mantenere.';
+      else if (deficit >= -100) focus = 'Vicino al mantenimento: peso stabile, utile per consolidare.';
+      else focus = 'Surplus calorico: probabile aumento peso, riduci calorie se vuoi dimagrire.';
+      ui.focusOut.textContent = focus;
+
+      const projections = [2, 3, 4].map((month) => {
+        const projected = clamp(state.weight - weeklyLoss * (month * 4.345), 35, 260);
+        return { label: `${month}m`, weight: projected };
+      });
+      const points = [{ label: 'Oggi', weight: state.weight }, ...projections];
+      drawProjectionChart(ui.chart, points);
+
+      ui.summary.textContent = `Mantenimento stimato ${Math.round(maintenance)} kcal · Perdita stimata ${weeklyLoss.toFixed(2)} kg/settimana`;
+    }
+
+    function initPlan(planId) {
+      const config = planConfigs[planId];
+      const ui = config.ui;
+      const state = getState(planId);
+      ui.weight.value = state.weight;
+      ui.height.value = state.height;
+      ui.age.value = state.age;
+      ui.activity.value = String(state.activity);
+      ui.calories.value = state.calories;
+
+      [ui.weight, ui.height, ui.age, ui.activity, ui.calories].forEach((input) => {
+        input.addEventListener('input', () => updatePlan(planId));
+      });
+
+      ui.reset.addEventListener('click', () => {
+        localStorage.removeItem(`diet-plan-${planId}`);
+        const defaults = planConfigs[planId].defaults;
+        ui.weight.value = defaults.weight;
+        ui.height.value = defaults.height;
+        ui.age.value = defaults.age;
+        ui.activity.value = String(defaults.activity);
+        ui.calories.value = defaults.calories;
+        updatePlan(planId);
+      });
+
+      updatePlan(planId);
+    }
+
     function applyChickenPreference() {
       document.querySelectorAll('td').forEach((cell) => {
-        if (!cell.dataset.originalContent) {
-          cell.dataset.originalContent = cell.innerHTML;
-        }
-
+        if (!cell.dataset.originalContent) cell.dataset.originalContent = cell.innerHTML;
         let content = cell.dataset.originalContent;
         if (chickenReduced) {
-          chickenSwaps.forEach((swap) => {
-            content = content.replaceAll(swap.from, swap.to);
-          });
+          chickenSwaps.forEach((swap) => { content = content.replaceAll(swap.from, swap.to); });
         }
         cell.innerHTML = content;
       });
-
       toggleChickenButton.textContent = chickenReduced ? 'Riduci pollo (ON)' : 'Riduci pollo (OFF)';
       toggleChickenButton.setAttribute('aria-pressed', String(chickenReduced));
     }
 
     function activatePlan(targetId) {
-      panels.forEach((panel) => {
-        panel.classList.toggle('active', panel.id === targetId);
-      });
-
+      panels.forEach((panel) => panel.classList.toggle('active', panel.id === targetId));
       tabButtons.forEach((button) => {
         const isActive = button.dataset.target === targetId;
         button.classList.toggle('active', isActive);
@@ -664,18 +980,15 @@
       });
     }
 
-    tabButtons.forEach((button) => {
-      button.addEventListener('click', () => activatePlan(button.dataset.target));
-    });
-
-    printButton.addEventListener('click', () => {
-      window.print();
-    });
-
+    tabButtons.forEach((button) => button.addEventListener('click', () => activatePlan(button.dataset.target)));
+    printButton.addEventListener('click', () => window.print());
     toggleChickenButton.addEventListener('click', () => {
       chickenReduced = !chickenReduced;
       applyChickenPreference();
     });
+
+    initPlan('chris');
+    initPlan('glo');
   </script>
 </body>
 </html>
