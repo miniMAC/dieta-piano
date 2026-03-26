@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#1d4ed8" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="icons/icon-180.svg" />
   <title>Piano Alimentare - Chris e Glo</title>
   <style>
     :root{
@@ -410,6 +413,39 @@
       font-size:13px;
     }
 
+    .install-banner{
+      margin-top:14px;
+      background:rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.25);
+      border-radius:12px;
+      padding:12px;
+      display:none;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .install-banner.show{
+      display:flex;
+    }
+
+    .install-banner p{
+      margin:0;
+      font-size:14px;
+      color:#fff;
+    }
+
+    .install-btn{
+      border:1px solid #fff;
+      background:#fff;
+      color:#0f172a;
+      border-radius:10px;
+      padding:8px 12px;
+      font-weight:700;
+      cursor:pointer;
+    }
+
     @media (max-width: 768px){
       .hero h1{font-size:26px}
       .section-title h2{font-size:22px}
@@ -472,6 +508,10 @@
       <div class="note">
         Piano organizzativo pratico. Le quantità sono stimate e vanno pesate preferibilmente a crudo.
         Se ci sono patologie, farmaci o problemi metabolici, meglio adattarlo con un nutrizionista.
+      </div>
+      <div id="installBanner" class="install-banner" role="status" aria-live="polite">
+        <p>Vuoi installare questa pagina come app sul dispositivo?</p>
+        <button id="installButton" class="install-btn" type="button">Installa app</button>
       </div>
       <button id="printButton" class="print-btn" type="button">Stampa / Salva PDF</button>
       <button id="toggleChickenButton" class="print-btn secondary" type="button" aria-pressed="false">Riduci pollo (OFF)</button>
@@ -792,6 +832,8 @@
     const panels = document.querySelectorAll('.plan-panel');
     const printButton = document.getElementById('printButton');
     const toggleChickenButton = document.getElementById('toggleChickenButton');
+    const installBanner = document.getElementById('installBanner');
+    const installButton = document.getElementById('installButton');
     const foodSwapsControls = document.getElementById('food-swaps-controls');
     const planConfigs = {
       chris: {
@@ -848,6 +890,7 @@
       }
     ];
     let foodSwapState = {};
+    let deferredInstallPrompt = null;
 
     function calculateBmr(weight, height, age, sex) {
       const base = 10 * weight + 6.25 * height - 5 * age;
@@ -1129,6 +1172,30 @@
     toggleChickenButton.addEventListener('click', () => {
       chickenReduced = !chickenReduced;
       applyPreferences();
+    });
+    installButton.addEventListener('click', async () => {
+      if (!deferredInstallPrompt) return;
+      deferredInstallPrompt.prompt();
+      const { outcome } = await deferredInstallPrompt.userChoice;
+      if (outcome === 'accepted') installBanner.classList.remove('show');
+      deferredInstallPrompt = null;
+    });
+
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./service-worker.js').catch(() => {});
+      });
+    }
+
+    window.addEventListener('beforeinstallprompt', (event) => {
+      event.preventDefault();
+      deferredInstallPrompt = event;
+      installBanner.classList.add('show');
+    });
+
+    window.addEventListener('appinstalled', () => {
+      installBanner.classList.remove('show');
+      deferredInstallPrompt = null;
     });
 
     foodSwapState = getFoodSwapState();
