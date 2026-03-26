@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Piano Alimentare - Chris e Glo</title>
+  <style>
+    :root{
+      --bg:#f4f6f8;
+      --card:#ffffff;
+      --text:#1f2937;
+      --muted:#6b7280;
+      --line:#e5e7eb;
+      --head:#0f172a;
+      --accent:#2563eb;
+      --accent-soft:#dbeafe;
+      --shadow:0 10px 30px rgba(15, 23, 42, 0.08);
+    }
+
+    *{box-sizing:border-box}
+
+    body{
+      margin:0;
+      font-family:Arial, Helvetica, sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      line-height:1.45;
+    }
+
+    .wrapper{
+      max-width:1280px;
+      margin:30px auto;
+      padding:0 16px 40px;
+    }
+
+    .hero{
+      background:linear-gradient(135deg, #0f172a, #1d4ed8);
+      color:#fff;
+      padding:28px;
+      border-radius:24px;
+      box-shadow:var(--shadow);
+      margin-bottom:24px;
+    }
+
+    .hero h1{
+      margin:0 0 8px;
+      font-size:32px;
+    }
+
+    .hero p{
+      margin:0;
+      color:rgba(255,255,255,.88);
+      font-size:16px;
+    }
+
+    .note{
+      margin-top:16px;
+      background:rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.18);
+      padding:14px 16px;
+      border-radius:14px;
+      font-size:14px;
+    }
+
+    .section{
+      margin-top:26px;
+      background:var(--card);
+      border-radius:24px;
+      box-shadow:var(--shadow);
+      padding:24px;
+    }
+
+    .section-title{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-bottom:18px;
+    }
+
+    .section-title h2{
+      margin:0;
+      font-size:28px;
+      color:var(--head);
+    }
+
+    .badge{
+      display:inline-block;
+      padding:8px 12px;
+      border-radius:999px;
+      background:var(--accent-soft);
+      color:var(--accent);
+      font-weight:700;
+      font-size:13px;
+    }
+
+    .cards{
+      display:grid;
+      grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));
+      gap:16px;
+      margin-bottom:24px;
+    }
+
+    .card{
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:18px;
+    }
+
+    .card h3{
+      margin:0 0 10px;
+      font-size:18px;
+      color:var(--head);
+    }
+
+    .card p{
+      margin:0;
+      color:var(--text);
+      font-size:15px;
+    }
+
+    .table-wrap{
+      overflow-x:auto;
+      margin-top:10px;
+    }
+
+    table{
+      width:100%;
+      min-width:900px;
+      border-collapse:collapse;
+      font-size:14px;
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:16px;
+      overflow:hidden;
+    }
+
+    th{
+      background:#eff6ff;
+      color:#0f172a;
+      text-align:left;
+      padding:14px;
+      font-size:14px;
+      border-bottom:1px solid var(--line);
+    }
+
+    td{
+      padding:14px;
+      border-bottom:1px solid var(--line);
+      vertical-align:top;
+      color:#111827;
+    }
+
+    tr:last-child td{
+      border-bottom:none;
+    }
+
+    .day{
+      font-weight:700;
+      color:var(--head);
+    }
+
+    .muted{
+      color:var(--muted);
+      font-size:12px;
+      margin-top:4px;
+      display:block;
+    }
+
+    .rules{
+      display:grid;
+      grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));
+      gap:14px;
+      margin-top:18px;
+    }
+
+    .rule-box{
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:16px;
+      background:#fafafa;
+    }
+
+    .rule-box h4{
+      margin:0 0 8px;
+      color:var(--head);
+      font-size:16px;
+    }
+
+    .rule-box ul{
+      margin:0;
+      padding-left:18px;
+    }
+
+    .rule-box li{
+      margin-bottom:8px;
+    }
+
+    .shopping-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit, minmax(300px, 1fr));
+      gap:16px;
+      margin-top:16px;
+    }
+
+    .shopping-card{
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:18px;
+      background:#fff;
+    }
+
+    .shopping-card h4{
+      margin:0 0 12px;
+      color:var(--head);
+      font-size:18px;
+    }
+
+    .shopping-card ul{
+      margin:0;
+      padding-left:18px;
+    }
+
+    .shopping-card li{
+      margin-bottom:8px;
+    }
+
+    .footer{
+      margin-top:26px;
+      background:#0f172a;
+      color:#fff;
+      border-radius:22px;
+      padding:22px;
+      box-shadow:var(--shadow);
+    }
+
+    .footer h3{
+      margin-top:0;
+      margin-bottom:10px;
+      font-size:22px;
+    }
+
+    .footer p{
+      margin:0;
+      color:rgba(255,255,255,.88);
+    }
+
+    .print-btn{
+      margin-top:16px;
+      display:inline-block;
+      padding:12px 18px;
+      background:#fff;
+      color:#0f172a;
+      border-radius:12px;
+      text-decoration:none;
+      font-weight:700;
+      border:1px solid rgba(255,255,255,.3);
+      cursor:pointer;
+    }
+
+    @media (max-width: 768px){
+      .hero h1{font-size:26px}
+      .section-title h2{font-size:22px}
+      .wrapper{margin:16px auto}
+      .section{padding:18px}
+    }
+
+    @media print{
+      body{ background:#fff; }
+      .wrapper{ max-width:none; margin:0; padding:0; }
+      .section,.hero,.footer{ box-shadow:none; }
+      .print-btn{ display:none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="hero">
+      <h1>Piano Alimentare Settimanale</h1>
+      <p>Schema pratico per dimagrimento con organizzazione pasti, calorie stimate e lista spesa pronta.</p>
+      <div class="note">
+        Piano organizzativo pratico. Le quantità sono stimate e vanno pesate preferibilmente a crudo.
+        Se ci sono patologie, farmaci o problemi metabolici, meglio adattarlo con un nutrizionista.
+      </div>
+      <button class="print-btn" onclick="window.print()">Stampa / Salva PDF</button>
+    </div>
+
+    <section class="section">
+      <div class="section-title">
+        <h2>Chris</h2>
+        <span class="badge">Obiettivo: dimagrimento deciso ma sostenibile</span>
+      </div>
+
+      <div class="cards">
+        <div class="card">
+          <h3>Dati</h3>
+          <p><strong>Peso:</strong> 94 kg<br>
+          <strong>Altezza:</strong> 178 cm<br>
+          <strong>Età:</strong> 46 anni<br>
+          <strong>Allenamento:</strong> palestra 4 volte a settimana</p>
+        </div>
+        <div class="card">
+          <h3>Target giornaliero</h3>
+          <p><strong>Calorie:</strong> ~2050 kcal<br>
+          <strong>Proteine:</strong> 180 g<br>
+          <strong>Carboidrati:</strong> 170 g<br>
+          <strong>Grassi:</strong> 60 g</p>
+        </div>
+        <div class="card">
+          <h3>Focus</h3>
+          <p>Proteine alte, carbo più utili nei giorni palestra, controllo del weekend e buona regolarità nei passi.</p>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Giorno</th>
+              <th>Colazione</th>
+              <th>Spuntino mattina</th>
+              <th>Pranzo</th>
+              <th>Spuntino pomeriggio</th>
+              <th>Cena</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="day">Lunedì</span><span class="muted">Palestra</span></td>
+              <td>250 g yogurt greco 0%<br>30 g whey<br>40 g avena<br>1 banana</td>
+              <td>1 mela</td>
+              <td>100 g riso basmati<br>180 g pollo<br>verdure a volontà<br>10 g olio EVO</td>
+              <td>170 g skyr<br>15 g mandorle</td>
+              <td>180 g salmone<br>verdure<br>60 g pane integrale</td>
+            </tr>
+            <tr>
+              <td><span class="day">Martedì</span><span class="muted">Palestra</span></td>
+              <td>3 uova intere<br>60 g pane integrale<br>1 kiwi</td>
+              <td>1 yogurt greco piccolo</td>
+              <td>90 g pasta integrale<br>160 g tonno naturale<br>insalata<br>10 g olio EVO</td>
+              <td>30 g whey<br>1 banana</td>
+              <td>200 g tacchino<br>verdure grigliate<br>200 g patate lesse</td>
+            </tr>
+            <tr>
+              <td><span class="day">Mercoledì</span><span class="muted">Riposo attivo</span></td>
+              <td>250 g yogurt greco 0%<br>30 g whey<br>20 g noci</td>
+              <td>1 pera</td>
+              <td>80 g riso<br>180 g pollo<br>verdure<br>10 g olio EVO</td>
+              <td>80 g bresaola</td>
+              <td>200 g merluzzo<br>verdure abbondanti<br>40 g pane integrale</td>
+            </tr>
+            <tr>
+              <td><span class="day">Giovedì</span><span class="muted">Palestra</span></td>
+              <td>250 ml latte o senza lattosio<br>40 g avena<br>30 g whey</td>
+              <td>1 frutto</td>
+              <td>100 g riso jasmine<br>180 g tacchino<br>verdure<br>10 g olio EVO</td>
+              <td>170 g yogurt proteico<br>15 g nocciole</td>
+              <td>180 g manzo magro<br>insalata grande<br>60 g pane integrale</td>
+            </tr>
+            <tr>
+              <td><span class="day">Venerdì</span><span class="muted">Palestra</span></td>
+              <td>3 uova + 150 g albumi<br>50 g pane integrale</td>
+              <td>1 mela</td>
+              <td>90 g pasta integrale<br>180 g pollo o tacchino<br>verdure<br>10 g olio EVO</td>
+              <td>30 g whey<br>1 banana</td>
+              <td>200 g pesce bianco<br>verdure<br>200 g patate al forno</td>
+            </tr>
+            <tr>
+              <td><span class="day">Sabato</span><span class="muted">Libero controllato</span></td>
+              <td>250 g yogurt greco 0%<br>30 g whey<br>1 frutto</td>
+              <td>10 g frutta secca</td>
+              <td>80 g riso o pasta<br>180 g carne magra<br>verdure<br>10 g olio EVO</td>
+              <td>1 yogurt proteico</td>
+              <td>Pasto libero controllato:<br>pizza semplice oppure burger piatto unico.<br>No dolce + alcol + fritto insieme.</td>
+            </tr>
+            <tr>
+              <td><span class="day">Domenica</span><span class="muted">Riposo</span></td>
+              <td>250 g yogurt greco 0%<br>30 g whey<br>20 g avena</td>
+              <td>1 frutto</td>
+              <td>80 g riso<br>180 g pollo<br>verdure<br>10 g olio EVO</td>
+              <td>80 g bresaola o 150 g fiocchi di latte</td>
+              <td>180 g salmone o orata<br>verdure abbondanti<br>40 g pane integrale</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-title">
+        <h2>Glo</h2>
+        <span class="badge">Obiettivo: dimagrimento graduale e semplice</span>
+      </div>
+
+      <div class="cards">
+        <div class="card">
+          <h3>Dati</h3>
+          <p><strong>Peso:</strong> 76 kg<br>
+          <strong>Altezza:</strong> 164 cm<br>
+          <strong>Attività:</strong> poca palestra / poco allenamento</p>
+        </div>
+        <div class="card">
+          <h3>Target giornaliero</h3>
+          <p><strong>Calorie:</strong> ~1450 kcal<br>
+          <strong>Proteine:</strong> 120 g<br>
+          <strong>Carboidrati:</strong> 120 g<br>
+          <strong>Grassi:</strong> 48 g</p>
+        </div>
+        <div class="card">
+          <h3>Focus</h3>
+          <p>Piano facile da seguire, fame sotto controllo, camminate regolari e pasto libero con moderazione.</p>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Giorno</th>
+              <th>Colazione</th>
+              <th>Spuntino mattina</th>
+              <th>Pranzo</th>
+              <th>Spuntino pomeriggio</th>
+              <th>Cena</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="day">Lunedì</span></td>
+              <td>170 g yogurt greco 0%<br>30 g avena<br>1 kiwi</td>
+              <td>1 mela</td>
+              <td>70 g riso basmati<br>140 g pollo<br>verdure<br>10 g olio EVO</td>
+              <td>1 yogurt proteico</td>
+              <td>150 g merluzzo<br>verdure abbondanti<br>40 g pane integrale</td>
+            </tr>
+            <tr>
+              <td><span class="day">Martedì</span></td>
+              <td>2 uova intere<br>40 g pane integrale</td>
+              <td>1 frutto</td>
+              <td>70 g pasta integrale<br>120 g tonno naturale<br>insalata<br>10 g olio EVO</td>
+              <td>10 g mandorle</td>
+              <td>150 g tacchino<br>verdure grigliate<br>150 g patate</td>
+            </tr>
+            <tr>
+              <td><span class="day">Mercoledì</span></td>
+              <td>170 g yogurt greco 0%<br>20 g noci</td>
+              <td>1 pera</td>
+              <td>60 g riso<br>140 g pollo<br>verdure<br>10 g olio EVO</td>
+              <td>80 g bresaola</td>
+              <td>150 g pesce bianco<br>verdure<br>30 g pane integrale</td>
+            </tr>
+            <tr>
+              <td><span class="day">Giovedì</span></td>
+              <td>200 ml latte o bevanda senza zucchero<br>30 g avena<br>20 g whey</td>
+              <td>1 frutto</td>
+              <td>70 g cous cous o riso<br>140 g tacchino<br>verdure<br>10 g olio EVO</td>
+              <td>1 yogurt greco piccolo</td>
+              <td>2 uova + albumi oppure fiocchi di latte<br>verdure abbondanti</td>
+            </tr>
+            <tr>
+              <td><span class="day">Venerdì</span></td>
+              <td>170 g yogurt greco 0%<br>30 g avena<br>1 frutto</td>
+              <td>10 g frutta secca</td>
+              <td>70 g pasta integrale<br>140 g pollo o tacchino<br>verdure<br>10 g olio EVO</td>
+              <td>1 yogurt proteico</td>
+              <td>150 g salmone<br>verdure<br>30 g pane integrale</td>
+            </tr>
+            <tr>
+              <td><span class="day">Sabato</span></td>
+              <td>2 uova<br>40 g pane integrale</td>
+              <td>1 frutto</td>
+              <td>70 g riso<br>140 g pollo<br>verdure<br>10 g olio EVO</td>
+              <td>1 yogurt greco</td>
+              <td>Pasto libero controllato:<br>pizza semplice o piatto unico moderato.</td>
+            </tr>
+            <tr>
+              <td><span class="day">Domenica</span></td>
+              <td>170 g yogurt greco 0%<br>20 g avena</td>
+              <td>1 mela</td>
+              <td>60 g riso o pasta<br>140 g carne magra o pesce<br>verdure<br>10 g olio EVO</td>
+              <td>80 g bresaola o fiocchi di latte</td>
+              <td>150 g pesce o tacchino<br>verdure abbondanti<br>30 g pane integrale</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <div class="footer">
+      <h3>Consiglio finale</h3>
+      <p>
+        Tieni questo schema almeno 14 giorni in modo serio prima di cambiare qualcosa.
+        Il vero problema quasi sempre non è il piano, ma il weekend, le quantità “a occhio” e gli extra invisibili.
+      </p>
+    </div>
+  </div>
+</body>
+</html>
