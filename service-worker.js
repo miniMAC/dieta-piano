@@ -1,4 +1,4 @@
-const CACHE_NAME = 'dieta-piano-v1';
+const CACHE_NAME = 'dieta-piano-v2';
 const APP_ASSETS = [
   './',
   './index.html',
@@ -22,6 +22,22 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
+
+  const requestUrl = new URL(event.request.url);
+  const isHtmlNavigation = event.request.mode === 'navigate' || requestUrl.pathname.endsWith('/index.html');
+
+  if (isHtmlNavigation) {
+    event.respondWith(
+      fetch(event.request)
+        .then((response) => {
+          const copy = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put('./index.html', copy));
+          return response;
+        })
+        .catch(() => caches.match('./index.html'))
+    );
+    return;
+  }
 
   event.respondWith(
     caches.match(event.request).then((cached) => {
