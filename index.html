@@ -343,30 +343,42 @@
 
     .chart{
       width:100%;
-      height:220px;
+      height:260px;
       border:1px solid var(--line);
       border-radius:12px;
       background:#fff;
     }
 
-    .footer{
-      margin-top:26px;
-      background:#0f172a;
-      color:#fff;
-      border-radius:22px;
-      padding:22px;
-      box-shadow:var(--shadow);
+    .projection-lists{
+      margin-top:12px;
+      display:grid;
+      grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));
+      gap:12px;
     }
 
-    .footer h3{
-      margin-top:0;
-      margin-bottom:10px;
-      font-size:22px;
+    .projection-block{
+      border:1px solid var(--line);
+      border-radius:12px;
+      padding:10px 12px;
+      background:#fff;
     }
 
-    .footer p{
+    .projection-block h4{
+      margin:0 0 8px;
+      font-size:14px;
+      color:var(--head);
+    }
+
+    .projection-block ul{
       margin:0;
-      color:rgba(255,255,255,.88);
+      padding-left:18px;
+      max-height:160px;
+      overflow:auto;
+    }
+
+    .projection-block li{
+      margin-bottom:5px;
+      font-size:13px;
     }
 
     .print-btn{
@@ -411,6 +423,28 @@
     .print-shopping li{
       margin-bottom:5px;
       font-size:13px;
+    }
+
+    .shopping-vertical{
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+
+    .shopping-group{
+      border-left:3px solid var(--accent);
+      padding-left:10px;
+    }
+
+    .shopping-group h4{
+      margin:0 0 6px;
+      font-size:14px;
+      color:var(--head);
+    }
+
+    .shopping-group ul{
+      margin:0;
+      padding-left:18px;
     }
 
     .install-banner{
@@ -463,7 +497,6 @@
       .wrapper{ max-width:none; margin:0; padding:0; }
       .hero .note,
       .tabs,
-      .footer,
       .cards,
       .print-btn{ display:none !important; }
       .hero,
@@ -554,7 +587,7 @@
       </div>
 
       <div class="projection">
-        <h3>Parametri personalizzabili + proiezione (date precise: oggi, +2, +3, +4 mesi)</h3>
+        <h3>Parametri personalizzabili + proiezione (stima settimanale e mensile)</h3>
         <p>I valori si salvano automaticamente in locale su questo dispositivo.</p>
         <div class="controls-grid">
           <div class="field">
@@ -582,12 +615,30 @@
             <label for="chris-daily-calories">Calorie target</label>
             <input id="chris-daily-calories" type="number" min="1000" max="4000" step="10">
           </div>
+          <div class="field">
+            <label for="chris-horizon">Orizzonte stima</label>
+            <select id="chris-horizon">
+              <option value="3">3 mesi</option>
+              <option value="4" selected>4 mesi</option>
+              <option value="5">5 mesi</option>
+            </select>
+          </div>
         </div>
         <div class="inline-actions">
           <button class="mini-btn" type="button" id="chris-reset">Ripristina default</button>
           <span class="muted" id="chris-summary"></span>
         </div>
-        <canvas id="chris-chart" class="chart" width="900" height="220"></canvas>
+        <canvas id="chris-chart" class="chart" width="900" height="260"></canvas>
+        <div class="projection-lists">
+          <div class="projection-block">
+            <h4>Stima settimanale</h4>
+            <ul id="chris-weekly-list"></ul>
+          </div>
+          <div class="projection-block">
+            <h4>Stima mensile</h4>
+            <ul id="chris-monthly-list"></ul>
+          </div>
+        </div>
       </div>
 
       <div class="table-wrap">
@@ -623,7 +674,7 @@
               <td><span class="day">Mercoledì</span><span class="muted">Riposo attivo</span></td>
               <td>1 cappuccino (senza zucchero)</td>
               <td>1 pera</td>
-              <td>250 g patate lesse<br>180 g 🥩 pollo<br>🥬 verdure<br>10 g olio EVO</td>
+              <td>220 g patate lesse + 180 g legumi cotti (ceci o cannellini)<br>160 g 🥩 pollo<br>🥬 verdure<br>10 g olio EVO</td>
               <td>80 g 🥩 bresaola</td>
               <td>200 g 🥩 manzo magro<br>🥬 verdure abbondanti<br>180 g patate al forno</td>
             </tr>
@@ -663,12 +714,8 @@
         </table>
       </div>
       <div class="print-shopping">
-        <h3>Lista della spesa settimanale (Chris) - stima ~€88-€102</h3>
-        <ul>
-          <li>Proteine: 🥩 pollo/🥩 tacchino 1.4 kg, 🐟 pesce (🐟 orata/🐟 branzino/🐟 sogliola/🐟 merluzzo) 1.1 kg, 🥩 manzo magro 180 g, 🐟 tonno naturale 320 g, 🥩 bresaola 160 g, 🥣 yogurt greco/proteico ~1 kg.</li>
-          <li>Carboidrati da tuberi/legumi: patate e patate dolci ~3.2 kg, legumi cotti ~600 g, frutta mista 14-16 pezzi.</li>
-          <li>Grassi e extra: olio EVO ~100 ml, frutta secca ~120 g, verdure miste almeno 4.5-5 kg.</li>
-        </ul>
+        <h3 id="chris-shopping-title">Lista della spesa (Chris)</h3>
+        <div id="chris-shopping-list" class="shopping-vertical"></div>
       </div>
     </section>
 
@@ -699,7 +746,7 @@
       </div>
 
       <div class="projection">
-        <h3>Parametri personalizzabili + proiezione (date precise: oggi, +2, +3, +4 mesi)</h3>
+        <h3>Parametri personalizzabili + proiezione (stima settimanale e mensile)</h3>
         <p>I valori si salvano automaticamente in locale su questo dispositivo.</p>
         <div class="controls-grid">
           <div class="field">
@@ -727,12 +774,30 @@
             <label for="glo-daily-calories">Calorie target</label>
             <input id="glo-daily-calories" type="number" min="900" max="3200" step="10">
           </div>
+          <div class="field">
+            <label for="glo-horizon">Orizzonte stima</label>
+            <select id="glo-horizon">
+              <option value="3">3 mesi</option>
+              <option value="4" selected>4 mesi</option>
+              <option value="5">5 mesi</option>
+            </select>
+          </div>
         </div>
         <div class="inline-actions">
           <button class="mini-btn" type="button" id="glo-reset">Ripristina default</button>
           <span class="muted" id="glo-summary"></span>
         </div>
-        <canvas id="glo-chart" class="chart" width="900" height="220"></canvas>
+        <canvas id="glo-chart" class="chart" width="900" height="260"></canvas>
+        <div class="projection-lists">
+          <div class="projection-block">
+            <h4>Stima settimanale</h4>
+            <ul id="glo-weekly-list"></ul>
+          </div>
+          <div class="projection-block">
+            <h4>Stima mensile</h4>
+            <ul id="glo-monthly-list"></ul>
+          </div>
+        </div>
       </div>
 
       <div class="table-wrap">
@@ -776,7 +841,7 @@
               <td><span class="day">Giovedì</span></td>
               <td>200 ml latte o bevanda senza zucchero<br>15 g noci<br>120 g 🥣 yogurt 0%</td>
               <td>1 frutto</td>
-              <td>220 g patate o 180 g legumi cotti<br>140 g 🥩 tacchino<br>🥬 verdure<br>10 g olio EVO</td>
+              <td>180 g legumi cotti (ceci o cannellini) + 150 g patate<br>130 g 🥩 tacchino<br>🥬 verdure<br>10 g olio EVO</td>
               <td>1 🥣 yogurt greco piccolo</td>
               <td>2 uova + albumi oppure fiocchi di latte<br>🥬 verdure abbondanti</td>
             </tr>
@@ -808,22 +873,11 @@
         </table>
       </div>
       <div class="print-shopping">
-        <h3>Lista della spesa settimanale (Glo) - stima ~€62-€76</h3>
-        <ul>
-          <li>Proteine: 🥩 pollo/🥩 tacchino 950 g, 🐟 pesce misto ~750 g, 🐟 tonno naturale 120 g, uova 10-12, 🥩 bresaola 160 g, 🥣 yogurt greco/proteico ~1.8 kg.</li>
-          <li>Carboidrati da tuberi/legumi: patate e patate dolci ~2.4 kg, legumi cotti ~500 g, frutta mista 12-14 pezzi.</li>
-          <li>Grassi e extra: olio EVO ~80 ml, frutta secca ~80 g, verdure miste almeno 3.5-4 kg.</li>
-        </ul>
+        <h3 id="glo-shopping-title">Lista della spesa (Glo)</h3>
+        <div id="glo-shopping-list" class="shopping-vertical"></div>
       </div>
     </section>
 
-    <div class="footer">
-      <h3>Consiglio finale</h3>
-      <p>
-        Tieni questo schema almeno 14 giorni in modo serio prima di cambiare qualcosa.
-        Il vero problema quasi sempre non è il piano, ma il weekend, le quantità “a occhio” e gli extra invisibili.
-      </p>
-    </div>
   </div>
   <script>
     const tabButtons = document.querySelectorAll('.tab-btn');
@@ -835,40 +889,60 @@
     const foodSwapsControls = document.getElementById('food-swaps-controls');
     const planConfigs = {
       chris: {
-        defaults: { weight: 94, height: 178, age: 46, activity: 1.65, calories: 2050, sex: 'M' },
+        defaults: { weight: 94, height: 178, age: 46, activity: 1.65, calories: 2050, horizon: 4, sex: 'M' },
         ui: {
           weight: document.getElementById('chris-weight'),
           height: document.getElementById('chris-height'),
           age: document.getElementById('chris-age'),
           activity: document.getElementById('chris-activity'),
           calories: document.getElementById('chris-daily-calories'),
+          horizon: document.getElementById('chris-horizon'),
           caloriesOut: document.getElementById('chris-calories'),
           proteinOut: document.getElementById('chris-protein'),
           carbsOut: document.getElementById('chris-carbs'),
           fatOut: document.getElementById('chris-fat'),
           focusOut: document.getElementById('chris-focus'),
           summary: document.getElementById('chris-summary'),
+          weeklyList: document.getElementById('chris-weekly-list'),
+          monthlyList: document.getElementById('chris-monthly-list'),
           chart: document.getElementById('chris-chart'),
+          shoppingTitle: document.getElementById('chris-shopping-title'),
+          shoppingList: document.getElementById('chris-shopping-list'),
           reset: document.getElementById('chris-reset')
-        }
+        },
+        shoppingBase: [
+          { group: 'Proteine', items: [{ name: 'Pollo/Tacchino', qty: 1400, unit: 'g' }, { name: 'Pesce misto', qty: 1100, unit: 'g' }, { name: 'Manzo magro', qty: 180, unit: 'g' }, { name: 'Tonno naturale', qty: 320, unit: 'g' }, { name: 'Bresaola', qty: 160, unit: 'g' }, { name: 'Yogurt greco/proteico', qty: 1000, unit: 'g' }] },
+          { group: 'Carboidrati e legumi', items: [{ name: 'Patate + patate dolci', qty: 3200, unit: 'g' }, { name: 'Legumi cotti (ceci/cannellini)', qty: 800, unit: 'g' }, { name: 'Frutta mista', qty: 15, unit: 'pz' }] },
+          { group: 'Verdure e grassi', items: [{ name: 'Verdure miste', qty: 4800, unit: 'g' }, { name: 'Olio EVO', qty: 100, unit: 'ml' }, { name: 'Frutta secca', qty: 120, unit: 'g' }] }
+        ]
       },
       glo: {
-        defaults: { weight: 68, height: 166, age: 38, activity: 1.4, calories: 1450, sex: 'F' },
+        defaults: { weight: 68, height: 166, age: 38, activity: 1.4, calories: 1450, horizon: 4, sex: 'F' },
         ui: {
           weight: document.getElementById('glo-weight'),
           height: document.getElementById('glo-height'),
           age: document.getElementById('glo-age'),
           activity: document.getElementById('glo-activity'),
           calories: document.getElementById('glo-daily-calories'),
+          horizon: document.getElementById('glo-horizon'),
           caloriesOut: document.getElementById('glo-calories'),
           proteinOut: document.getElementById('glo-protein'),
           carbsOut: document.getElementById('glo-carbs'),
           fatOut: document.getElementById('glo-fat'),
           focusOut: document.getElementById('glo-focus'),
           summary: document.getElementById('glo-summary'),
+          weeklyList: document.getElementById('glo-weekly-list'),
+          monthlyList: document.getElementById('glo-monthly-list'),
           chart: document.getElementById('glo-chart'),
+          shoppingTitle: document.getElementById('glo-shopping-title'),
+          shoppingList: document.getElementById('glo-shopping-list'),
           reset: document.getElementById('glo-reset')
-        }
+        },
+        shoppingBase: [
+          { group: 'Proteine', items: [{ name: 'Pollo/Tacchino', qty: 950, unit: 'g' }, { name: 'Pesce misto', qty: 750, unit: 'g' }, { name: 'Tonno naturale', qty: 120, unit: 'g' }, { name: 'Uova', qty: 11, unit: 'pz' }, { name: 'Bresaola', qty: 160, unit: 'g' }, { name: 'Yogurt greco/proteico', qty: 1800, unit: 'g' }] },
+          { group: 'Carboidrati e legumi', items: [{ name: 'Patate + patate dolci', qty: 2400, unit: 'g' }, { name: 'Legumi cotti (ceci/cannellini)', qty: 700, unit: 'g' }, { name: 'Frutta mista', qty: 13, unit: 'pz' }] },
+          { group: 'Verdure e grassi', items: [{ name: 'Verdure miste', qty: 3800, unit: 'g' }, { name: 'Olio EVO', qty: 80, unit: 'ml' }, { name: 'Frutta secca', qty: 80, unit: 'g' }] }
+        ]
       }
     };
     let chickenReduced = false;
@@ -909,6 +983,12 @@
       return result;
     }
 
+    function addDaysFromDate(baseDate, daysToAdd) {
+      const result = new Date(baseDate);
+      result.setDate(result.getDate() + daysToAdd);
+      return result;
+    }
+
     function getState(planId) {
       const saved = localStorage.getItem(`diet-plan-${planId}`);
       if (!saved) return { ...planConfigs[planId].defaults };
@@ -919,10 +999,19 @@
       localStorage.setItem(`diet-plan-${planId}`, JSON.stringify(state));
     }
 
+    function syncCanvasDpi(canvas) {
+      const ratio = Math.max(1, Math.floor(window.devicePixelRatio || 1));
+      const cssWidth = canvas.clientWidth || canvas.width;
+      const cssHeight = canvas.clientHeight || canvas.height;
+      canvas.width = Math.round(cssWidth * ratio);
+      canvas.height = Math.round(cssHeight * ratio);
+      return { ratio, width: cssWidth, height: cssHeight };
+    }
+
     function drawProjectionChart(canvas, points) {
       const ctx = canvas.getContext('2d');
-      const width = canvas.width;
-      const height = canvas.height;
+      const { ratio, width, height } = syncCanvasDpi(canvas);
+      ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
       const padding = { top: 24, right: 30, bottom: 34, left: 52 };
       ctx.clearRect(0, 0, width, height);
 
@@ -1013,6 +1102,45 @@
       });
     }
 
+    function renderProjectionLists(ui, weeklyLoss, baseWeight, horizonMonths) {
+      const today = new Date();
+      const weeklySteps = Math.max(1, Math.round(horizonMonths * 4.345));
+      const weeklyItems = Array.from({ length: weeklySteps }, (_, idx) => {
+        const week = idx + 1;
+        const date = addDaysFromDate(today, week * 7);
+        const weight = clamp(baseWeight - weeklyLoss * week, 35, 260);
+        return `<li>Settimana ${week} (${formatDateLabel(date)}): <strong>${weight.toFixed(1)} kg</strong></li>`;
+      }).join('');
+      ui.weeklyList.innerHTML = weeklyItems;
+
+      const monthlyItems = Array.from({ length: horizonMonths }, (_, idx) => {
+        const month = idx + 1;
+        const date = addMonthsFromDate(today, month);
+        const weight = clamp(baseWeight - weeklyLoss * (month * 4.345), 35, 260);
+        return `<li>Mese ${month} (${formatDateLabel(date)}): <strong>${weight.toFixed(1)} kg</strong></li>`;
+      }).join('');
+      ui.monthlyList.innerHTML = monthlyItems;
+    }
+
+    function renderShoppingList(planId, horizonMonths) {
+      const config = planConfigs[planId];
+      const weeks = horizonMonths * 4.345;
+      const scaled = config.shoppingBase.map((group) => ({
+        ...group,
+        items: group.items.map((item) => ({ ...item, scaledQty: item.qty * weeks }))
+      }));
+
+      config.ui.shoppingTitle.textContent = `Lista spesa ${horizonMonths} mesi (${planId === 'chris' ? 'Chris' : 'Glo'})`;
+      config.ui.shoppingList.innerHTML = scaled.map((group) => `
+        <div class="shopping-group">
+          <h4>${group.group}</h4>
+          <ul>
+            ${group.items.map((item) => `<li>${item.name}: <strong>${item.unit === 'pz' ? Math.ceil(item.scaledQty) : Math.round(item.scaledQty)} ${item.unit}</strong></li>`).join('')}
+          </ul>
+        </div>
+      `).join('');
+    }
+
     function updatePlan(planId) {
       const config = planConfigs[planId];
       const ui = config.ui;
@@ -1025,6 +1153,7 @@
         age: Number(ui.age.value),
         activity: safeActivity,
         calories: Number(ui.calories.value),
+        horizon: clamp(Number(ui.horizon.value) || 4, 3, 5),
         sex: config.defaults.sex
       };
       saveState(planId, state);
@@ -1036,6 +1165,7 @@
       const protein = Math.round(clamp(state.weight * 1.8, 90, 220));
       const fat = Math.round(clamp(state.weight * 0.7, 40, 90));
       const carbs = Math.max(50, Math.round((state.calories - protein * 4 - fat * 9) / 4));
+      const horizonMonths = state.horizon;
 
       ui.caloriesOut.textContent = `~${Math.round(state.calories)}`;
       ui.proteinOut.textContent = protein;
@@ -1051,18 +1181,21 @@
       ui.focusOut.textContent = focus;
 
       const today = new Date();
-      const projections = [2, 3, 4].map((month) => {
+      const projections = Array.from({ length: horizonMonths }, (_, idx) => idx + 1).map((month) => {
         const projected = clamp(state.weight - weeklyLoss * (month * 4.345), 35, 260);
         const projectionDate = addMonthsFromDate(today, month);
         return { label: formatDateLabel(projectionDate), weight: projected };
       });
       const points = [{ label: formatDateLabel(today), weight: state.weight }, ...projections];
       drawProjectionChart(ui.chart, points);
+      renderProjectionLists(ui, weeklyLoss, state.weight, horizonMonths);
+      renderShoppingList(planId, horizonMonths);
 
       const trendLabel = weeklyLoss >= 0
         ? `Perdita stimata ${weeklyLoss.toFixed(2)} kg/settimana`
         : `Aumento stimato ${Math.abs(weeklyLoss).toFixed(2)} kg/settimana`;
-      ui.summary.textContent = `Mantenimento stimato ${Math.round(maintenance)} kcal · ${trendLabel}`;
+      const monthlyTrend = Math.abs(weeklyLoss * 4.345).toFixed(2);
+      ui.summary.textContent = `Mantenimento stimato ${Math.round(maintenance)} kcal · ${trendLabel} · ~${monthlyTrend} kg/mese`;
     }
 
     function initPlan(planId) {
@@ -1075,8 +1208,9 @@
       ui.activity.value = String(state.activity);
       if (!ui.activity.value) ui.activity.value = String(config.defaults.activity);
       ui.calories.value = state.calories;
+      ui.horizon.value = String(state.horizon || config.defaults.horizon || 4);
 
-      [ui.weight, ui.height, ui.age, ui.activity, ui.calories].forEach((input) => {
+      [ui.weight, ui.height, ui.age, ui.activity, ui.calories, ui.horizon].forEach((input) => {
         input.addEventListener('input', () => updatePlan(planId));
       });
 
@@ -1088,6 +1222,7 @@
         ui.age.value = defaults.age;
         ui.activity.value = String(defaults.activity);
         ui.calories.value = defaults.calories;
+        ui.horizon.value = '4';
         updatePlan(planId);
       });
 
