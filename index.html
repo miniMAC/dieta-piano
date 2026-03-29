@@ -571,7 +571,7 @@
           <p><strong>Peso:</strong> 94 kg<br>
           <strong>Altezza:</strong> 178 cm<br>
           <strong>Età:</strong> 46 anni<br>
-          <strong>Allenamento:</strong> palestra 4 volte a settimana</p>
+          <strong>Allenamento:</strong> palestra 3 volte a settimana (lunedì, mercoledì, venerdì)</p>
         </div>
         <div class="card">
           <h3>Target giornaliero</h3>
@@ -582,7 +582,7 @@
         </div>
         <div class="card">
           <h3>Focus</h3>
-          <p id="chris-focus">Proteine alte, carbo più utili nei giorni palestra, controllo del weekend e buona regolarità nei passi.</p>
+          <p id="chris-focus">Proteine alte, carbo più utili nei giorni palestra (lun/mer/ven), controllo del weekend e buona regolarità nei passi.</p>
         </div>
       </div>
 
@@ -663,15 +663,15 @@
               <td>180 g 🥩 tacchino<br>🥬 verdure<br>200 g patate lesse</td>
             </tr>
             <tr>
-              <td><span class="day">Martedì</span><span class="muted">Palestra</span></td>
+              <td><span class="day">Martedì</span><span class="muted">Recupero + camminata</span></td>
               <td>1 cappuccino (senza zucchero)</td>
               <td>1 kiwi</td>
               <td>280 g patate dolci<br>160 g 🐟 tonno naturale<br>🥬 insalata<br>10 g olio EVO</td>
               <td>170 g 🥣 yogurt 0%<br>1 banana</td>
-              <td>200 g 🐟 merluzzo<br>🥬 verdure grigliate<br>200 g patate lesse</td>
+              <td>200 g 🐟 branzino o 🐟 orata<br>🥬 verdure grigliate<br>200 g patate lesse</td>
             </tr>
             <tr>
-              <td><span class="day">Mercoledì</span><span class="muted">Riposo attivo</span></td>
+              <td><span class="day">Mercoledì</span><span class="muted">Palestra</span></td>
               <td>1 cappuccino (senza zucchero)</td>
               <td>1 pera</td>
               <td>220 g patate lesse + 180 g legumi cotti (ceci o cannellini)<br>160 g 🥩 pollo<br>🥬 verdure<br>10 g olio EVO</td>
@@ -679,7 +679,7 @@
               <td>200 g 🥩 manzo magro<br>🥬 verdure abbondanti<br>180 g patate al forno</td>
             </tr>
             <tr>
-              <td><span class="day">Giovedì</span><span class="muted">Palestra</span></td>
+              <td><span class="day">Giovedì</span><span class="muted">Recupero + passi</span></td>
               <td>1 cappuccino (senza zucchero)</td>
               <td>1 frutto</td>
               <td>300 g patate dolci<br>180 g 🐟 salmone<br>🥬 verdure<br>10 g olio EVO</td>
@@ -827,7 +827,7 @@
               <td>1 frutto</td>
               <td>220 g patate dolci<br>120 g 🐟 tonno naturale<br>🥬 insalata<br>10 g olio EVO</td>
               <td>10 g mandorle</td>
-              <td>150 g 🐟 merluzzo<br>🥬 verdure grigliate<br>150 g patate</td>
+              <td>150 g 🐟 branzino o 🐟 orata<br>🥬 verdure grigliate<br>150 g patate</td>
             </tr>
             <tr>
               <td><span class="day">Mercoledì</span></td>
@@ -949,7 +949,7 @@
     const chickenSwaps = [
       { from: '180 g 🥩 pollo o 🥩 tacchino', to: '140 g legumi + 120 g 🥩 tacchino' },
       { from: '140 g 🥩 pollo o 🥩 tacchino', to: '110 g legumi + 100 g 🥩 tacchino' },
-      { from: '180 g 🥩 pollo', to: '140 g 🐟 merluzzo o 🥩 tacchino' },
+      { from: '180 g 🥩 pollo', to: '140 g 🐟 branzino o 🥩 tacchino' },
       { from: '140 g 🥩 pollo', to: '110 g 🐟 pesce bianco o tofu' }
     ];
     const foodSwapStorageKey = 'diet-plan-food-swaps-v1';
@@ -1122,20 +1122,27 @@
       ui.monthlyList.innerHTML = monthlyItems;
     }
 
-    function renderShoppingList(planId, horizonMonths) {
-      const config = planConfigs[planId];
-      const weeks = horizonMonths * 4.345;
-      const scaled = config.shoppingBase.map((group) => ({
-        ...group,
-        items: group.items.map((item) => ({ ...item, scaledQty: item.qty * weeks }))
-      }));
+    function formatWeeklyQuantity(item) {
+      if (item.unit === 'g' || item.unit === 'ml') {
+        const etti = item.qty / 100;
+        const formattedEtti = Number.isInteger(etti) ? `${etti}` : etti.toFixed(1).replace('.', ',');
+        return `${formattedEtti} etti`;
+      }
+      if (item.unit === 'pz') {
+        return `${Math.ceil(item.qty)} pz`;
+      }
+      return `${item.qty} ${item.unit}`;
+    }
 
-      config.ui.shoppingTitle.textContent = `Lista spesa ${horizonMonths} mesi (${planId === 'chris' ? 'Chris' : 'Glo'})`;
-      config.ui.shoppingList.innerHTML = scaled.map((group) => `
+    function renderShoppingList(planId) {
+      const config = planConfigs[planId];
+
+      config.ui.shoppingTitle.textContent = `Lista della spesa settimanale (${planId === 'chris' ? 'Chris' : 'Glo'})`;
+      config.ui.shoppingList.innerHTML = config.shoppingBase.map((group) => `
         <div class="shopping-group">
           <h4>${group.group}</h4>
           <ul>
-            ${group.items.map((item) => `<li>${item.name}: <strong>${item.unit === 'pz' ? Math.ceil(item.scaledQty) : Math.round(item.scaledQty)} ${item.unit}</strong></li>`).join('')}
+            ${group.items.map((item) => `<li>${item.name}: <strong>${formatWeeklyQuantity(item)}</strong></li>`).join('')}
           </ul>
         </div>
       `).join('');
@@ -1189,7 +1196,7 @@
       const points = [{ label: formatDateLabel(today), weight: state.weight }, ...projections];
       drawProjectionChart(ui.chart, points);
       renderProjectionLists(ui, weeklyLoss, state.weight, horizonMonths);
-      renderShoppingList(planId, horizonMonths);
+      renderShoppingList(planId);
 
       const trendLabel = weeklyLoss >= 0
         ? `Perdita stimata ${weeklyLoss.toFixed(2)} kg/settimana`
